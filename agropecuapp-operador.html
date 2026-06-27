@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Agropecuapp · Operador</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/3.2.0/tabler-icons.min.css">
+<style>
+:root{
+  --field:#2f6b43;--field-deep:#1d4a2c;--paper:#eef0e6;--card:#ffffff;
+  --ink:#16201a;--muted:#5e6b58;--gold:#bf8a2a;--clay:#a8543a;--line:rgba(20,30,20,.12);
+  --disp:'Space Grotesk',system-ui,sans-serif;--mono:'IBM Plex Mono',monospace;
+  --body:system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#d9ddcf;font-family:var(--body);color:var(--ink)}
+.app{max-width:460px;margin:0 auto;min-height:100vh;background:var(--paper);
+  display:flex;flex-direction:column;position:relative}
+.hdr{background:var(--field);color:#eef3ea;padding:14px 18px;display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:5}
+.hdr .av{width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.18);
+  display:flex;align-items:center;justify-content:center;font-family:var(--disp);font-weight:600;font-size:15px}
+.hdr .who{flex:1;line-height:1.25}
+.hdr .who b{font-family:var(--disp);font-weight:600;font-size:16px;display:block}
+.hdr .who span{font-size:12px;opacity:.85}
+.sync{font-family:var(--mono);font-size:10px;background:rgba(255,255,255,.16);padding:5px 9px;
+  border-radius:999px;display:flex;align-items:center;gap:5px}
+.sync .d{width:7px;height:7px;border-radius:50%;background:#9be07e}
+.view{flex:1;padding:18px}
+h2.t{font-family:var(--disp);font-weight:600;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin:0 0 12px}
+.statecard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;text-align:center;margin-bottom:16px}
+.statecard .lbl{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--field);text-transform:uppercase}
+.statecard .lote{font-family:var(--disp);font-weight:700;font-size:42px;line-height:1.05;margin:6px 0 2px}
+.statecard .meta{font-size:13px;color:var(--muted)}
+.odo{display:flex;justify-content:center;gap:4px;margin:16px 0 4px}
+.odo .dg{font-family:var(--mono);font-weight:600;font-size:26px;background:var(--field-deep);color:#eaf3e6;
+  width:30px;height:42px;border-radius:6px;display:flex;align-items:center;justify-content:center}
+.odo .dot{align-self:flex-end;color:var(--muted);font-weight:700;font-size:20px;padding-bottom:6px}
+.odolbl{text-align:center;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.elapsed{font-family:var(--disp);font-weight:600;font-size:18px;color:var(--field)}
+.bigbtn{width:100%;border:none;border-radius:14px;padding:18px;font-family:var(--disp);font-weight:600;
+  font-size:18px;display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;margin-bottom:12px}
+.bigbtn.primary{background:var(--field);color:#fff}
+.bigbtn.gold{background:var(--gold);color:#fff}
+.bigbtn:active{transform:scale(.985)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.mbtn{border:1px solid var(--line);background:var(--card);border-radius:14px;padding:15px;cursor:pointer;
+  font-family:var(--body);font-size:15px;display:flex;flex-direction:column;align-items:center;gap:6px;color:var(--ink)}
+.mbtn i{font-size:24px;color:var(--field)}
+.mbtn.danger i{color:var(--clay)}
+.log{margin-top:6px}
+.log .row{display:flex;justify-content:space-between;align-items:center;padding:11px 2px;border-bottom:1px solid var(--line);font-size:15px}
+.log .row .r{color:var(--muted);font-size:12px;font-family:var(--mono)}
+.log .row b{font-family:var(--disp);font-weight:600}
+.empty{color:var(--muted);font-size:14px;text-align:center;padding:18px 0}
+.field{margin-bottom:16px}
+.field label{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.loteopt{display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);
+  background:var(--card);border-radius:13px;padding:14px 15px;margin-bottom:9px;cursor:pointer;font-size:16px}
+.loteopt.sel{border:2px solid var(--field);background:rgba(47,107,67,.06)}
+.loteopt .ha{color:var(--muted);font-weight:400;font-size:14px}
+.loteopt i{color:var(--field);font-size:20px}
+.photobtn{width:100%;border:1px dashed var(--field);background:rgba(47,107,67,.05);color:var(--field);
+  border-radius:13px;padding:16px;font-family:var(--body);font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:9px;font-weight:500}
+.photobtn.done{border-style:solid;background:rgba(47,107,67,.1)}
+.photo-prev{width:100%;max-height:150px;object-fit:cover;border-radius:13px;margin-top:10px;display:none}
+.numin{width:100%;border:1px solid var(--line);border-radius:13px;padding:14px 15px;font-family:var(--mono);
+  font-weight:600;font-size:24px;color:var(--ink);background:var(--card);outline:none}
+.numin:focus{border-color:var(--field)}
+.numin.bad{border-color:var(--clay);background:rgba(168,84,58,.05)}
+.hint{font-size:12px;color:var(--muted);margin-top:7px}
+.hint.bad{color:var(--clay)}
+.barbtn{position:sticky;bottom:0;background:var(--paper);padding:14px 0 4px;margin-top:8px}
+.back{background:none;border:none;color:var(--muted);font-size:15px;display:flex;align-items:center;gap:6px;
+  cursor:pointer;margin-bottom:14px;padding:4px 0;font-family:var(--body)}
+.sumtot{background:var(--field);color:#eef3ea;border-radius:18px;padding:20px;text-align:center;margin-bottom:16px}
+.sumtot .big{font-family:var(--disp);font-weight:700;font-size:38px}
+.sumtot .l{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.bar{height:8px;border-radius:4px;background:rgba(47,107,67,.14);overflow:hidden;margin-top:5px}
+.bar span{display:block;height:100%;background:var(--field)}
+button:disabled{opacity:.45}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<input type="file" accept="image/*" capture="environment" id="filein" style="display:none">
+
+<script>
+const LOTES=[
+  {id:'l1',name:'Lote 1',ha:18},{id:'l3',name:'Lote 3',ha:18},
+  {id:'l4',name:'Lote 4',ha:22},{id:'l5',name:'Lote 5',ha:18},{id:'l7',name:'Lote 7',ha:30}
+];
+const OP={name:'Juan Pérez',ini:'JU',tractor:'Tractor JD 6110'};
+let S=load()||{started:false,ended:false,segments:[],fuel:[],lastH:null,date:Date.now()};
+let pendingLote=null,pendingPhoto=false,timer=null;
+
+function load(){try{const r=localStorage.getItem('agro_oper');return r?JSON.parse(r):null;}catch(e){return null;}}
+function save(){try{localStorage.setItem('agro_oper',JSON.stringify(S));}catch(e){}}
+function fmt(n){return n==null?'—':Number(n).toLocaleString('es-CO');}
+function hrs(n){return (Math.round(n*10)/10).toLocaleString('es-CO',{minimumFractionDigits:1,maximumFractionDigits:1});}
+function loteName(id){const l=LOTES.find(x=>x.id===id);return l?l.name:id;}
+function curSeg(){return S.segments.find(s=>s.hEnd==null);}
+function totalH(){return S.segments.reduce((a,s)=>a+((s.hEnd!=null?s.hEnd:s.hStart)-s.hStart),0);}
+function perLote(){const m={};S.segments.forEach(s=>{const h=(s.hEnd!=null?s.hEnd:s.hStart)-s.hStart;m[s.lote]=(m[s.lote]||0)+h;});return m;}
+
+const app=document.getElementById('app'),filein=document.getElementById('filein');
+filein.addEventListener('change',function(){
+  if(this.files&&this.files[0]){pendingPhoto=true;
+    const pv=document.getElementById('prev');
+    if(pv){pv.src=URL.createObjectURL(this.files[0]);pv.style.display='block';}
+    const pb=document.getElementById('pbtn');
+    if(pb){pb.classList.add('done');pb.innerHTML='<i class="ti ti-photo-check"></i> Foto tomada · tomar otra';}
+  }
+});
+function header(){
+  return `<div class="hdr">
+    <div class="av">${OP.ini}</div>
+    <div class="who"><b>${OP.name}</b><span>${OP.tractor}</span></div>
+    <div class="sync"><span class="d"></span>se sube solo</div>
+  </div>`;
+}
+function odo(n){
+  const s=String(n==null?0:n);let h='';
+  for(const c of s)h+=`<div class="dg">${c}</div>`;
+  return `<div class="odo">${h}</div>`;
+}
+
+function render(view){
+  if(timer){clearInterval(timer);timer=null;}
+  let v=view;
+  if(!v){v=S.ended?'summary':(S.started?'home':'start');}
+  app.innerHTML=header()+`<div class="view" id="view"></div>`;
+  const box=document.getElementById('view');
+  if(v==='start')box.innerHTML=vStart();
+  else if(v==='home'){box.innerHTML=vHome();startClock();}
+  else if(v==='pick')box.innerHTML=vPick();
+  else if(v==='fuel')box.innerHTML=vFuel();
+  else if(v==='end')box.innerHTML=vEnd();
+  else if(v==='summary')box.innerHTML=vSummary();
+  wire(v);
+}
+
+function vStart(){
+  return `<h2 class="t">Nueva jornada</h2>
+    <div class="statecard">
+      <div class="lbl">Listo para empezar</div>
+      <div style="font-family:var(--disp);font-weight:600;font-size:22px;margin:10px 0 2px">${OP.tractor}</div>
+      <div class="meta">${OP.name}</div>
+    </div>
+    <button class="bigbtn primary" id="go"><i class="ti ti-player-play"></i> Empezar jornada</button>
+    <p class="hint" style="text-align:center">Vas a elegir el primer lote y tomar la foto del horómetro.</p>`;
+}
+
+function vHome(){
+  const c=curSeg();const pl=perLote();
+  let log='';const done=S.segments.filter(s=>s.hEnd!=null);
+  if(done.length){done.forEach(s=>{log+=`<div class="row"><span>${loteName(s.lote)} <span class="r">${fmt(s.hStart)}→${fmt(s.hEnd)}</span></span><b>${hrs(s.hEnd-s.hStart)} h</b></div>`;});}
+  else log=`<div class="empty">Aún no has cerrado ningún lote hoy.</div>`;
+  const fuelTxt=S.fuel.length?`<div class="row"><span><i class="ti ti-gas-station" style="vertical-align:-3px;color:var(--field)"></i> Combustible</span><b>${fmt(S.fuel.reduce((a,f)=>a+f.gal,0))} gal</b></div>`:'';
+  return `<h2 class="t">En curso</h2>
+    <div class="statecard">
+      <div class="lbl">Trabajando en</div>
+      <div class="lote">${loteName(c.lote)}</div>
+      <div class="meta">desde horómetro ${fmt(c.hStart)}</div>
+      <div style="margin-top:10px" class="elapsed" id="el">0 h 00 m</div>
+    </div>
+    <button class="bigbtn primary" id="change"><i class="ti ti-camera"></i> Cambiar de lote</button>
+    <div class="row2">
+      <button class="mbtn" id="fuel"><i class="ti ti-gas-station"></i> Tanquear</button>
+      <button class="mbtn danger" id="end"><i class="ti ti-flag"></i> Terminar</button>
+    </div>
+    <h2 class="t" style="margin-top:18px">Hoy</h2>
+    <div class="log">${log}${fuelTxt}</div>`;
+}
+
+function vPick(){
+  const c=curSeg();const start=!S.started;
+  const cur=c?c.lote:null;
+  let opts='';LOTES.filter(l=>l.id!==cur).forEach(l=>{
+    const sel=pendingLote===l.id?' sel':'';
+    opts+=`<div class="loteopt${sel}" data-l="${l.id}"><span>${l.name} <span class="ha">· ${l.ha} ha</span></span>${pendingLote===l.id?'<i class="ti ti-check"></i>':''}</div>`;
+  });
+  return `<button class="back" id="back"><i class="ti ti-arrow-left"></i> Volver</button>
+    <h2 class="t">${start?'Empezar en el lote':'Cambiar de lote'}</h2>
+    <div class="field"><label>¿En qué lote vas a trabajar?</label>${opts}</div>
+    <div class="field"><label>Foto del horómetro</label>
+      <button class="photobtn" id="pbtn"><i class="ti ti-camera"></i> Tomar foto</button>
+      <img class="photo-prev" id="prev" alt="">
+    </div>
+    <div class="field"><label>Número del horómetro</label>
+      <input class="numin" id="hin" inputmode="numeric" placeholder="0">
+      <div class="hint" id="hhint">${S.lastH!=null?'anterior: '+fmt(S.lastH)+' · no puede ser menor':'el número que marca el tablero'}</div>
+    </div>
+    <div class="barbtn"><button class="bigbtn primary" id="savep" disabled><i class="ti ti-check"></i> Guardar y empezar</button></div>`;
+}
+
+function vFuel(){
+  return `<button class="back" id="back"><i class="ti ti-arrow-left"></i> Volver</button>
+    <h2 class="t">Tanquear</h2>
+    <div class="field"><label>Galones cargados</label>
+      <input class="numin" id="gin" inputmode="decimal" placeholder="0"></div>
+    <div class="field"><label>Foto del horómetro</label>
+      <button class="photobtn" id="pbtn"><i class="ti ti-camera"></i> Tomar foto</button>
+      <img class="photo-prev" id="prev" alt=""></div>
+    <div class="field"><label>Número del horómetro</label>
+      <input class="numin" id="hin" inputmode="numeric" placeholder="0">
+      <div class="hint" id="hhint">anterior: ${fmt(S.lastH)} · no puede ser menor</div></div>
+    <div class="barbtn"><button class="bigbtn gold" id="savef" disabled><i class="ti ti-check"></i> Guardar tanqueo</button></div>`;
+}
+
+function vEnd(){
+  const c=curSeg();
+  return `<button class="back" id="back"><i class="ti ti-arrow-left"></i> Volver</button>
+    <h2 class="t">Terminar jornada</h2>
+    <p class="hint" style="margin:0 0 16px">Cierra el ${loteName(c.lote)} con la última foto del horómetro.</p>
+    <div class="field"><label>Foto del horómetro</label>
+      <button class="photobtn" id="pbtn"><i class="ti ti-camera"></i> Tomar foto</button>
+      <img class="photo-prev" id="prev" alt=""></div>
+    <div class="field"><label>Número del horómetro</label>
+      <input class="numin" id="hin" inputmode="numeric" placeholder="0">
+      <div class="hint" id="hhint">anterior: ${fmt(S.lastH)} · no puede ser menor</div></div>
+    <div class="barbtn"><button class="bigbtn danger-btn" id="savee" disabled style="background:var(--clay);color:#fff"><i class="ti ti-flag"></i> Terminar jornada</button></div>`;
+}
+
+function vSummary(){
+  const pl=perLote();const tot=totalH();
+  let rows='';Object.keys(pl).forEach(id=>{
+    const h=pl[id];const pct=tot?Math.round(h/tot*100):0;
+    rows+=`<div class="row"><span>${loteName(id)} <span class="r">${pct}%</span></span><b>${hrs(h)} h</b></div>
+      <div class="bar"><span style="width:${pct}%"></span></div>`;
+  });
+  const gal=S.fuel.reduce((a,f)=>a+f.gal,0);
+  return `<h2 class="t">Jornada terminada</h2>
+    <div class="sumtot"><div class="l">Total trabajado</div><div class="big">${hrs(tot)} h</div></div>
+    <h2 class="t">Por lote</h2><div class="log">${rows}</div>
+    ${gal?`<h2 class="t" style="margin-top:18px">Combustible</h2><div class="log"><div class="row"><span>Total cargado</span><b>${fmt(gal)} gal</b></div></div>`:''}
+    <p class="hint" style="margin:16px 0">Las horas por lote alimentan el pago, el combustible y el desgaste. Todo queda guardado y se sube solo cuando haya señal.</p>
+    <button class="bigbtn primary" id="newday"><i class="ti ti-refresh"></i> Nueva jornada</button>`;
+}
+
+function validH(input,hint,btn){
+  const raw=input.value.replace(/\D/g,'');const v=raw?parseInt(raw,10):null;
+  const min=S.lastH;
+  let ok=v!=null&&(min==null||v>=min);
+  input.classList.toggle('bad',v!=null&&min!=null&&v<min);
+  hint.classList.toggle('bad',v!=null&&min!=null&&v<min);
+  if(v!=null&&min!=null&&v<min)hint.textContent='El horómetro no puede ser menor que '+fmt(min);
+  if(btn)btn.disabled=!ok;
+  return ok?v:null;
+}
+
+function wire(v){
+  if(v==='start'){document.getElementById('go').onclick=()=>{pendingLote=null;pendingPhoto=false;render('pick');};return;}
+  if(v==='home'){
+    document.getElementById('change').onclick=()=>{pendingLote=null;pendingPhoto=false;render('pick');};
+    document.getElementById('fuel').onclick=()=>{pendingPhoto=false;render('fuel');};
+    document.getElementById('end').onclick=()=>{pendingPhoto=false;render('end');};
+    return;
+  }
+  if(v==='pick'){
+    document.getElementById('back').onclick=()=>render(S.started?'home':'start');
+    app.querySelectorAll('.loteopt').forEach(o=>o.onclick=()=>{pendingLote=o.dataset.l;refreshPick();});
+    document.getElementById('pbtn').onclick=()=>filein.click();
+    const hin=document.getElementById('hin'),hint=document.getElementById('hhint'),btn=document.getElementById('savep');
+    hin.oninput=()=>refreshPick();
+    btn.onclick=()=>{
+      const h=validH(hin,hint,btn);if(h==null||!pendingLote)return;
+      const c=curSeg();if(c)c.hEnd=h;
+      S.segments.push({lote:pendingLote,hStart:h,hEnd:null,ts:Date.now()});
+      S.lastH=h;S.started=true;save();render('home');
+    };
+    refreshPick();return;
+  }
+  if(v==='fuel'){
+    document.getElementById('back').onclick=()=>render('home');
+    document.getElementById('pbtn').onclick=()=>filein.click();
+    const gin=document.getElementById('gin'),hin=document.getElementById('hin'),hint=document.getElementById('hhint'),btn=document.getElementById('savef');
+    function rf(){const g=parseFloat(gin.value.replace(',','.'));const h=validH(hin,hint,null);btn.disabled=!(g>0&&h!=null);}
+    gin.oninput=rf;hin.oninput=rf;
+    btn.onclick=()=>{const g=parseFloat(gin.value.replace(',','.'));const h=validH(hin,hint,null);if(!(g>0&&h!=null))return;
+      S.fuel.push({gal:g,h:h,ts:Date.now()});S.lastH=Math.max(S.lastH,h);save();render('home');};
+    return;
+  }
+  if(v==='end'){
+    document.getElementById('back').onclick=()=>render('home');
+    document.getElementById('pbtn').onclick=()=>filein.click();
+    const hin=document.getElementById('hin'),hint=document.getElementById('hhint'),btn=document.getElementById('savee');
+    hin.oninput=()=>{validH(hin,hint,btn);};
+    btn.onclick=()=>{const h=validH(hin,hint,btn);if(h==null)return;
+      const c=curSeg();if(c)c.hEnd=h;S.lastH=h;S.ended=true;save();render('summary');};
+    return;
+  }
+  if(v==='summary'){
+    document.getElementById('newday').onclick=()=>{S={started:false,ended:false,segments:[],fuel:[],lastH:null,date:Date.now()};save();render('start');};
+    return;
+  }
+}
+
+function refreshPick(){
+  app.querySelectorAll('.loteopt').forEach(o=>{
+    const on=o.dataset.l===pendingLote;o.classList.toggle('sel',on);
+    o.innerHTML=`<span>${loteName(o.dataset.l)} <span class="ha">· ${LOTES.find(l=>l.id===o.dataset.l).ha} ha</span></span>${on?'<i class="ti ti-check"></i>':''}`;
+    o.onclick=()=>{pendingLote=o.dataset.l;refreshPick();};
+  });
+  const hin=document.getElementById('hin'),hint=document.getElementById('hhint'),btn=document.getElementById('savep');
+  const h=validH(hin,hint,null);
+  btn.disabled=!(h!=null&&pendingLote);
+}
+
+function startClock(){
+  const c=curSeg();if(!c||!c.ts)return;const el=document.getElementById('el');
+  function up(){const ms=Date.now()-c.ts;const m=Math.floor(ms/60000);const hh=Math.floor(m/60);const mm=m%60;
+    if(el)el.textContent=hh+' h '+String(mm).padStart(2,'0')+' m';}
+  up();timer=setInterval(up,15000);
+}
+
+render();
+</script>
+</body>
+</html>
